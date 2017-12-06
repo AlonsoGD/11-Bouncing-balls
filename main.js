@@ -13,23 +13,22 @@ function random(min,max) {
   return num;
 }
 
-function Ball(x, y, velX, velY, color, size) {
+function Shape(x, y, velX, velY, existence) {
   this.x = x;
   this.y = y;
   this.velX = velX;
   this.velY = velY;
-  this.color = color;
-  this.size = size;
+  this.existence = boolean;
 }
 
-Ball.prototype.draw = function () {
+Shape.prototype.draw = function () {
   ctx.beginPath();
   ctx.fillStyle = this.color;
   ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
   ctx.fill();
 }
 
-Ball.prototype.update = function () {
+Shape.prototype.update = function () {
   if ((this.x + this.size) >= width) {
     this.velX = -(this.velX);
   }
@@ -50,7 +49,7 @@ Ball.prototype.update = function () {
   this.y += this.velY;
 }
 
-Ball.prototype.collisionDetect = function () {
+Shape.prototype.collisionDetect = function () {
   for (var j = 0; j < balls.length; j++) {
     if (!(this === balls[j])) {
       var dx = this.x - balls[j].x;
@@ -63,6 +62,16 @@ Ball.prototype.collisionDetect = function () {
     }
   }
 }
+
+function Ball(x, y, velX, velY, existence, color, size) {
+  Shape.call(this, x, y, velX, velY, existence);
+  
+  this.color = color;
+  this.size = size;
+}
+
+Ball.prototype = Object.create(Shape.prototype);
+Ball.prototype.constructor = Ball;
 ///////////////////////////////////
 
 var balls = [];
