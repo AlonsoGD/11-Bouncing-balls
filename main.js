@@ -89,7 +89,7 @@ function EvilCircle(x, y, existence) {
 EvilCircle.prototype = Object.create(Shape.prototype);
 EvilCircle.prototype.constructor = EvilCircle;
 
-//EvilCircle Methdos
+//EvilCircle Methods
 EvilCircle.prototype.draw = function () {
   ctx.beginPath();
   ctx.lineWidth = 3;
@@ -155,6 +155,7 @@ EvilCircle.prototype.collisionDetect = function () {
 
       if (distance < this.size + balls[j].size) {
         balls[j].existence = false;
+        decreaseBallsCounter(); 
       }
     }
   }
@@ -164,8 +165,21 @@ EvilCircle.prototype.collisionDetect = function () {
 
 var balls = [];
 var evilCircle;
+var ballsLeft = 0;
+var ballsCounter = document.getElementById('ballscounter');
+
+function increaseBallsCounter () {
+  ballsLeft++;
+  ballsCounter.innerHTML = ballsLeft;
+}
+
+function decreaseBallsCounter () {
+  ballsLeft--;
+  ballsCounter.innerHTML = ballsLeft;
+}
 
 function loop() {
+  
   ctx.fillStyle = 'rgba(0, 0, 0, 1)';
   ctx.fillRect(0, 0, width, height);
 
@@ -180,6 +194,7 @@ function loop() {
       random(10, 20)
     );
     balls.push(ball);
+    increaseBallsCounter();
   }
 
   for (var i = 0; i < balls.length; i++) {
@@ -202,7 +217,7 @@ function loop() {
   evilCircle.draw();
   evilCircle.checkBounds();
   evilCircle.collisionDetect();
-  
+
   requestAnimationFrame(loop);
 }
 
