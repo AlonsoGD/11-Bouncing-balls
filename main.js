@@ -69,7 +69,7 @@ Ball.prototype.collisionDetect = function () {
       var dy = this.y - balls[j].y;
       var distance =  Math.sqrt(dx * dx + dy * dy);
 
-      if (distance < this.size + balls[j].size) {
+      if (distance < this.size + balls[j].size && balls[j].existence === true) {
         balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
       }
     }
@@ -99,19 +99,19 @@ EvilCircle.prototype.draw = function () {
 }
 // no bounds version
 EvilCircle.prototype.checkBounds = function () {
-  if ((this.x) >= width - 1 ) {
-    this.x = 1;
+  if ((this.x) >= width + 50 ) {
+    this.x = 0;
   }
 
-  if ((this.x) <= 0) {
+  if ((this.x) <= -50) {
     this.x = width;
    }
 
-  if ((this.y ) >= height - 1) {
-    this.y = 1;
+  if ((this.y ) >= height + 50) {
+    this.y = 0;
   }
 
-  if ((this.y) <= 0) {
+  if ((this.y) <= -50) {
     this.y = height;
   }
 
@@ -154,7 +154,9 @@ EvilCircle.prototype.collisionDetect = function () {
       var distance =  Math.sqrt(dx * dx + dy * dy);
 
       if (distance < this.size + balls[j].size) {
+        var idx = balls.indexOf(balls[j])
         balls[j].existence = false;
+        balls.splice(idx, 1);
         decreaseBallsCounter(); 
       }
     }
@@ -178,12 +180,8 @@ function decreaseBallsCounter () {
   ballsCounter.innerHTML = ballsLeft;
 }
 
-function loop() {
-  
-  ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-  ctx.fillRect(0, 0, width, height);
-
-  while (balls.length < 25) {
+function spawnBalls() {
+  for (var z = 0; z < 50; z++) {
     var ball = new Ball (
       random(0, width),
       random(0, height),
@@ -196,6 +194,11 @@ function loop() {
     balls.push(ball);
     increaseBallsCounter();
   }
+}
+
+function loop() { 
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  ctx.fillRect(0, 0, width, height);
 
   for (var i = 0; i < balls.length; i++) {
     if (balls[i].existence === true) { 
@@ -223,6 +226,7 @@ function loop() {
 
 // Activate game
 canvas.onclick = function () {
+  spawnBalls();
   loop();
   return false;
 }
