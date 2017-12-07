@@ -42,7 +42,7 @@ Ball.prototype.draw = function () {
   ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
   ctx.fill();
 }
-Ball.prototype.update = function () {
+Ball.prototype.checkBounds = function () {
   if ((this.x + this.size) >= width) {
     this.velX = -(this.velX);
   }
@@ -58,10 +58,13 @@ Ball.prototype.update = function () {
   if ((this.y - this.size) <= 0) {
     this.velY = -(this.velY);
   }
-
+  
+}
+Ball.prototype.updateSpeed = function () {
   this.x += this.velX;
   this.y += this.velY;
 }
+
 Ball.prototype.collisionDetect = function () {
   for (var j = 0; j < balls.length; j++) {
     if (!(this === balls[j])) {
@@ -82,8 +85,9 @@ function EvilCircle(x, y, existence) {
 
   this.color = 'white';
   this.size = 25;
-  this.velX = 25;
-  this.velY = 25;
+  this.velX = 0;
+  this.velY = 0;
+  this.friction = 0.95;
 }
 
 EvilCircle.prototype = Object.create(Shape.prototype);
@@ -114,38 +118,37 @@ EvilCircle.prototype.checkBounds = function () {
   if ((this.y) <= -50) {
     this.y = height;
   }
-
-  //Bounds version: 
-  //   if ((this.x + this.size) >= width) {
-  //     this.x = (this.x) - 10;
-  //   }
-
-  //   if ((this.x - this.size) <= 0) {
-  //     this.x = +(this.x) + 10;
-  //   }
-
-  //   if ((this.y + this.size) >= height) {
-  //     this.y = (this.y) - 10;
-  //   }
-
-  //   if ((this.y - this.size) <= 0) {
-  //     this.y = +(this.y) + 10;
-  //   }
 }
 EvilCircle.prototype.setControls = function () {
   var _this = this;
+  var wKey = 87;
+  var sKey = 83;
+  var aKey = 65;
+  var dKey = 68;
+  var maxSpeed = 15;
+  
   window.onkeydown = function(e) {
-    if (e.keyCode === 65) {
-      _this.x -= _this.velX;
-    } else if (e.keyCode === 68) {
-      _this.x += _this.velX;
-    } else if (e.keyCode === 87) {
-      _this.y -= _this.velY;
-    } else if (e.keyCode === 83) {
-      _this.y += _this.velY;
+    if (e.keyCode === aKey) {
+      _this.velX -= 2;
+    } else if (e.keyCode === dKey) {
+      _this.velX += 2;
+    } else if (e.keyCode === wKey) {
+      _this.velY -= 2;
+    } else if (e.keyCode === sKey) {
+      _this.velY += 2;
     }
   }
+
 }
+
+EvilCircle.prototype.updateSpeed = function () {
+  this.velX *= this.friction
+  this.velY *= this.friction
+
+  this.x += this.velX
+  this.y += this.velY
+}
+
 EvilCircle.prototype.collisionDetect = function () {
   for (var j = 0; j < balls.length; j++) {
     if (!(balls[j].existence === false)) {
@@ -203,7 +206,8 @@ function loop() {
   for (var i = 0; i < balls.length; i++) {
     if (balls[i].existence === true) { 
       balls[i].draw();
-      balls[i].update();
+      balls[i].updateSpeed();
+      balls[i].checkBounds();
       balls[i].collisionDetect();
     }
   }
@@ -218,6 +222,7 @@ function loop() {
 
   evilCircle.setControls();
   evilCircle.draw();
+  evilCircle.updateSpeed();
   evilCircle.checkBounds();
   evilCircle.collisionDetect();
 
