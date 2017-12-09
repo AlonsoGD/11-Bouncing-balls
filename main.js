@@ -1,5 +1,6 @@
 // setup canvas
 
+var html = document.querySelector('html');
 var canvas = document.querySelector('canvas');
 var ctx = canvas.getContext('2d');
 var width = canvas.width = window.innerWidth;
@@ -226,7 +227,7 @@ function loop() {
 }
 
 // Activate game
-canvas.onclick = function () {
+html.onclick = function () {
   instructions.style.display = "none";
   spawnBalls();
   loop();
