@@ -5,6 +5,7 @@ html, body {
   html {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height: 100%;
+    width: 100%;
   }
   
   body {
@@ -24,10 +25,20 @@ html, body {
     text-shadow: 0 0 0px white;
   }
 
+  ul {
+    list-style-type: none;
+  }
+
   p {
     position: absolute;
     margin: 0;
     top: 35px;
     right: 5px;
-    color: #aaa;
+    color: white;
+  }
+  
+  #instructions{
+    color: black;
+    text-align: center;
+    display: block;
   }

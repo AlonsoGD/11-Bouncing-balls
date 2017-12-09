@@ -2,11 +2,10 @@
 
 var canvas = document.querySelector('canvas');
 var ctx = canvas.getContext('2d');
-
 var width = canvas.width = window.innerWidth;
 var height = canvas.height = window.innerHeight;
-
 var para = document.querySelector('p');
+var instructions = document.getElementById('instructions');
 
 // function to generate random number
 
@@ -138,9 +137,7 @@ EvilCircle.prototype.setControls = function () {
       _this.velY += 2;
     }
   }
-
 }
-
 EvilCircle.prototype.updateSpeed = function () {
   this.velX *= this.friction
   this.velY *= this.friction
@@ -148,7 +145,6 @@ EvilCircle.prototype.updateSpeed = function () {
   this.x += this.velX
   this.y += this.velY
 }
-
 EvilCircle.prototype.collisionDetect = function () {
   for (var j = 0; j < balls.length; j++) {
     if (!(balls[j].existence === false)) {
@@ -231,6 +227,7 @@ function loop() {
 
 // Activate game
 canvas.onclick = function () {
+  instructions.style.display = "none";
   spawnBalls();
   loop();
   return false;
