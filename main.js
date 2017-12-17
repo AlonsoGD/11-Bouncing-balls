@@ -1,13 +1,29 @@
 // setup canvas
 
-var html = document.querySelector('html');
-var canvas = document.querySelector('canvas');
-var ctx = canvas.getContext('2d');
+const html = document.querySelector('html');
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
+const para = document.querySelector('p');
+const instructions = document.getElementById('instructions');
+const UPKEY = {
+  keycode : 87,
+  pressed : false 
+}
+const DOWNKEY = {
+  keycode : 83,
+  pressed : false
+}
+const LEFTKEY = {
+  keycode : 65,
+  pressed : false
+}
+const RIGHTKEY = {
+  keycode : 68,
+  pressed : false
+}
+
 var width = canvas.width = window.innerWidth;
 var height = canvas.height = window.innerHeight;
-var para = document.querySelector('p');
-var instructions = document.getElementById('instructions');
-
 // function to generate random number
 
 function random(min,max) {
@@ -121,24 +137,17 @@ EvilCircle.prototype.checkBounds = function () {
 }
 EvilCircle.prototype.setControls = function () {
   var _this = this;
-  var wKey = 87;
-  var sKey = 83;
-  var aKey = 65;
-  var dKey = 68;
-  var maxSpeed = 15;
-  
-  window.onkeydown = function(e) {
-    if (e.keyCode === aKey) {
-      _this.velX -= 2;
-    } else if (e.keyCode === dKey) {
-      _this.velX += 2;
-    } else if (e.keyCode === wKey) {
-      _this.velY -= 2;
-    } else if (e.keyCode === sKey) {
-      _this.velY += 2;
-    }
+  if (LEFTKEY.pressed === true) {
+    _this.velX -= 1;
+  } else if (RIGHTKEY.pressed === true) {
+    _this.velX += 1;
+  } else if (UPKEY.pressed === true) {
+    _this.velY -= 1;
+  } else if (DOWNKEY.pressed === true) {
+    _this.velY += 1;
   }
 }
+
 EvilCircle.prototype.updateSpeed = function () {
   this.velX *= this.friction
   this.velY *= this.friction
@@ -217,7 +226,55 @@ function loop() {
     );
   }
 
-  evilCircle.setControls();
+  window.onkeydown = function(event) {
+    switch (event.which || event.keyCode) {
+      case LEFTKEY.keycode: // Left
+        LEFTKEY.pressed = true;
+        console.log(LEFTKEY.pressed);
+        break;
+      case RIGHTKEY.keycode: // Right
+        RIGHTKEY.pressed = true;
+        break;
+      case UPKEY.keycode: // Up
+        UPKEY.pressed = true;
+        break;
+      case DOWNKEY.keycode: // Down
+        DOWNKEY.pressed = true;
+        console.log(DOWNKEY.pressed)
+        break;
+    }
+  }
+
+  window.onkeyup = function(event) {
+    switch (event.which || event.keyCode) {
+      case LEFTKEY.keycode: // Left
+        LEFTKEY.pressed = false;
+        console.log(LEFTKEY.pressed);
+        break;
+      case RIGHTKEY.keycode: // Right
+        RIGHTKEY.pressed = false;
+        break;
+      case UPKEY.keycode: // Up
+        UPKEY.pressed = false;
+        break;
+      case DOWNKEY.keycode: // Down
+        DOWNKEY.pressed = false;
+        console.log(DOWNKEY.pressed)
+        break;
+    }
+  }
+
+  if (LEFTKEY.pressed === true) {
+    evilCircle.velX -= 1;
+  } else if (RIGHTKEY.pressed === true) {
+    evilCircle.velX += 1;
+  } else if (UPKEY.pressed === true) {
+    evilCircle.velY -= 1;
+  } else if (DOWNKEY.pressed === true) {
+    evilCircle.velY += 1;
+  }
+
+  //evilCircle.setControls();
   evilCircle.draw();
   evilCircle.updateSpeed();
   evilCircle.checkBounds();
