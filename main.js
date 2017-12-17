@@ -104,6 +104,7 @@ function EvilCircle(x, y, existence) {
   this.velX = 0;
   this.velY = 0;
   this.friction = 0.95;
+  this.maxspeed = 0.5;
 }
 
 EvilCircle.prototype = Object.create(Shape.prototype);
@@ -117,7 +118,6 @@ EvilCircle.prototype.draw = function () {
   ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
   ctx.stroke();
 }
-// no bounds version
 EvilCircle.prototype.checkBounds = function () {
   if ((this.x) >= width + 50 ) {
     this.x = 0;
@@ -137,17 +137,54 @@ EvilCircle.prototype.checkBounds = function () {
 }
 EvilCircle.prototype.setControls = function () {
   var _this = this;
+
+  window.onkeydown = function(event) {
+    switch (event.which || event.keyCode) {
+      case LEFTKEY.keycode: // Left
+        LEFTKEY.pressed = true;
+        break;
+      case RIGHTKEY.keycode: // Right
+        RIGHTKEY.pressed = true;
+        break;
+      case UPKEY.keycode: // Up
+        UPKEY.pressed = true;
+        break;
+      case DOWNKEY.keycode: // Down
+        DOWNKEY.pressed = true;
+        break;
+    }
+  }
+
+  window.onkeyup = function(event) {
+    switch (event.which || event.keyCode) {
+      case LEFTKEY.keycode: // Left
+        LEFTKEY.pressed = false;
+        break;
+      case RIGHTKEY.keycode: // Right
+        RIGHTKEY.pressed = false;
+        break;
+      case UPKEY.keycode: // Up
+        UPKEY.pressed = false;
+        break;
+      case DOWNKEY.keycode: // Down
+        DOWNKEY.pressed = false;
+        break;
+    }
+  }
+
   if (LEFTKEY.pressed === true) {
-    _this.velX -= 1;
-  } else if (RIGHTKEY.pressed === true) {
-    _this.velX += 1;
-  } else if (UPKEY.pressed === true) {
-    _this.velY -= 1;
-  } else if (DOWNKEY.pressed === true) {
-    _this.velY += 1;
+    _this.velX -= _this.maxspeed;
+  } 
+  if (RIGHTKEY.pressed === true) {
+    _this.velX += _this.maxspeed;
+  } 
+  if (UPKEY.pressed === true) {
+    _this.velY -= _this.maxspeed;
+  } 
+  if (DOWNKEY.pressed === true) {
+    _this.velY += _this.maxspeed;
   }
 }
-
 EvilCircle.prototype.updateSpeed = function () {
   this.velX *= this.friction
   this.velY *= this.friction
@@ -183,12 +220,10 @@ function increaseBallsCounter () {
   ballsLeft++;
   ballsCounter.innerHTML = ballsLeft;
 }
-
 function decreaseBallsCounter () {
   ballsLeft--;
   ballsCounter.innerHTML = ballsLeft;
 }
-
 function spawnBalls() {
   for (var z = 0; z < 50; z++) {
     var ball = new Ball (
@@ -204,7 +239,6 @@ function spawnBalls() {
     increaseBallsCounter();
   }
 }
-
 function loop() { 
   ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
   ctx.fillRect(0, 0, width, height);
@@ -226,55 +260,7 @@ function loop() {
     );
   }
 
-  window.onkeydown = function(event) {
-    switch (event.which || event.keyCode) {
-      case LEFTKEY.keycode: // Left
-        LEFTKEY.pressed = true;
-        console.log(LEFTKEY.pressed);
-        break;
-      case RIGHTKEY.keycode: // Right
-        RIGHTKEY.pressed = true;
-        break;
-      case UPKEY.keycode: // Up
-        UPKEY.pressed = true;
-        break;
-      case DOWNKEY.keycode: // Down
-        DOWNKEY.pressed = true;
-        console.log(DOWNKEY.pressed)
-        break;
-    }
-  }
-
-  window.onkeyup = function(event) {
-    switch (event.which || event.keyCode) {
-      case LEFTKEY.keycode: // Left
-        LEFTKEY.pressed = false;
-        console.log(LEFTKEY.pressed);
-        break;
-      case RIGHTKEY.keycode: // Right
-        RIGHTKEY.pressed = false;
-        break;
-      case UPKEY.keycode: // Up
-        UPKEY.pressed = false;
-        break;
-      case DOWNKEY.keycode: // Down
-        DOWNKEY.pressed = false;
-        console.log(DOWNKEY.pressed)
-        break;
-    }
-  }
-
-  if (LEFTKEY.pressed === true) {
-    evilCircle.velX -= 1;
-  } else if (RIGHTKEY.pressed === true) {
-    evilCircle.velX += 1;
-  } else if (UPKEY.pressed === true) {
-    evilCircle.velY -= 1;
-  } else if (DOWNKEY.pressed === true) {
-    evilCircle.velY += 1;
-  }
-
-  //evilCircle.setControls();
+  evilCircle.setControls();
   evilCircle.draw();
   evilCircle.updateSpeed();
   evilCircle.checkBounds();
