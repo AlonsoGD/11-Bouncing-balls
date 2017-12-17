@@ -119,20 +119,20 @@ EvilCircle.prototype.draw = function () {
   ctx.stroke();
 }
 EvilCircle.prototype.checkBounds = function () {
-  if ((this.x) >= width + 50 ) {
-    this.x = 0;
+  if ((this.x) >= width + (this.size * 2)) {
+    this.x = -(this.size);
   }
 
-  if ((this.x) <= -50) {
-    this.x = width;
+  if ((this.x) <= -(this.size * 2)) {
+    this.x = width + (this.size);
    }
 
-  if ((this.y ) >= height + 50) {
-    this.y = 0;
+  if ((this.y ) >= height + (this.size * 2)) {
+    this.y = -(this.size);
   }
 
-  if ((this.y) <= -50) {
-    this.y = height;
+  if ((this.y) <= -(this.size * 2)) {
+    this.y = height + (this.size);
   }
 }
 EvilCircle.prototype.setControls = function () {
